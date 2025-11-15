@@ -12,7 +12,6 @@ import {
 } from 'chart.js'
 import type { PokemonStat } from '../types/pokemon'
 
-// registrar componentes de Chart.js
 ChartJS.register(
   RadialLinearScale,
   PointElement,
@@ -36,7 +35,6 @@ const data = computed(() => ({
       label: 'stats base (PokeApi)',
       data: values.value,
       fill: true,
-      // puedes dejar que Chart.js use colores por defecto o definirlos
       backgroundColor: 'rgba(244, 67, 54, 0.2)',
       borderColor: 'rgba(244, 67, 54, 1)',
       pointBackgroundColor: 'rgba(244, 67, 54, 1)',
