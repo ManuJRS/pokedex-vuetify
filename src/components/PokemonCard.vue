@@ -4,20 +4,25 @@ import type { Pokemon } from '../types/pokemon'
 import PokemonStatsRadar from '../components/PokemonStatsRadar.vue'
 import PokemonAttackSpeedBar from '../components/PokemonAttackSpeedBar.vue'
 import { fetchWeaknesses } from '../service/PokemonType'
+import {fetchAbilitiesDetails} from "../service/PokemonAbilities";
+import type { PokemonAbilityWithEffect } from '../service/PokemonAbilities'
 
 const props = defineProps<{
   pokemon: Pokemon
 }>()
 
 const weaknesses = ref<string[]>([])
+const abilities = ref<PokemonAbilityWithEffect[]>([])
 
 watch(
   () => props.pokemon,
   async (newVal) => {
     if (newVal) {
       weaknesses.value = await fetchWeaknesses(newVal.types)
+      abilities.value = await fetchAbilitiesDetails(newVal)
     } else {
       weaknesses.value = []
+      abilities.value = []
     }
   },
   { immediate: true }
@@ -86,6 +91,31 @@ const totalStats = computed(() => {
           <PokemonAttackSpeedBar :stats="pokemon.stats" />
         </v-card-text>
       </v-col>
+      <v-table density="compact" class="mb-4">
+    <thead>
+      <tr>
+        <th>Habilidad</th>
+        <th>Descripción</th>
+        <th>Oculta</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="ability in abilities" :key="ability.name">
+        <td>{{ ability.name }}</td>
+        <td>{{ ability.effect }}</td>
+        <td>
+          <v-chip
+            :color="ability.is_hidden ? 'deep-purple-darken-2' : 'green-darken-2'"
+            text-color="white"
+            size="x-small"
+          >
+            {{ ability.is_hidden ? 'Sí' : 'No' }}
+          </v-chip>
+        </td>
+      </tr>
+    </tbody>
+  </v-table>
+
     </v-row>
   </v-card>
 </template>
