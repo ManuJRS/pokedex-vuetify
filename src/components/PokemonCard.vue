@@ -6,6 +6,7 @@ import PokemonAttackSpeedBar from '../components/PokemonAttackSpeedBar.vue'
 import { fetchWeaknesses } from '../service/PokemonType'
 import {fetchAbilitiesDetails} from "../service/PokemonAbilities";
 import type { PokemonAbilityWithEffect } from '../service/PokemonAbilities'
+import { fetchEvolutionStagesByPokemon, type EvolutionStage, } from '../service/PokemonEvolutions'
 
 const props = defineProps<{
   pokemon: Pokemon
@@ -13,6 +14,7 @@ const props = defineProps<{
 
 const weaknesses = ref<string[]>([])
 const abilities = ref<PokemonAbilityWithEffect[]>([])
+const evolutions = ref<EvolutionStage[]>([])
 
 watch(
   () => props.pokemon,
@@ -20,9 +22,11 @@ watch(
     if (newVal) {
       weaknesses.value = await fetchWeaknesses(newVal.types)
       abilities.value = await fetchAbilitiesDetails(newVal)
+      evolutions.value = await fetchEvolutionStagesByPokemon(newVal)
     } else {
       weaknesses.value = []
       abilities.value = []
+      evolutions.value = []
     }
   },
   { immediate: true }
@@ -116,6 +120,52 @@ const totalStats = computed(() => {
     </tbody>
   </v-table>
 
+
+<div v-if="evolutions.length" class="mb-4">
+  <p class="mt-4"><strong>Evolución:</strong></p>
+  <v-row
+    v-for="stage in evolutions"
+    :key="stage.stage"
+    class="mb-3"
+  >
+<v-col
+  v-for="poke in stage.pokemons"
+  :key="poke.id"
+  cols="4"
+  class="text-center"
+>
+  <v-avatar size="64" class="mb-1">
+    <v-img
+      v-if="poke.sprite"
+      :src="poke.sprite"
+      :alt="poke.name"
+    />
+    <span v-else>?</span>
+  </v-avatar>
+
+  <div
+    class="text-caption"
+    :class="{ 'text-yellow-accent-3': poke.name === pokemon.name }"
+  >
+    #{{ poke.id }} {{ poke.name }}
+    <span v-if="poke.name === pokemon.name"> (actual)</span>
+  </div>
+
+  <!-- Método de evolución, solo si existe -->
+  <div
+    v-if="poke.method && stage.stage > 1"
+    class="text-caption mt-1"
+  >
+    <em>{{ poke.method }}</em>
+  </div>
+</v-col>
+
+  </v-row>
+</div>
+
+<p v-else class="text-body-2 mb-4">
+  Este Pokémon no tiene cadena de evolución.
+</p>
     </v-row>
   </v-card>
 </template>
