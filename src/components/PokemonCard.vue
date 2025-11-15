@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Pokemon } from '../types/pokemon'
 import PokemonStatsRadar from '../components/PokemonStatsRadar.vue'
+import PokemonAttackSpeedBar from '../components/PokemonAttackSpeedBar.vue';
 import { computed } from 'vue';
 
 const totalStats = computed(() => {
@@ -55,6 +56,7 @@ const props = defineProps<{
 
           <!-- Gráfica de stats -->
           <PokemonStatsRadar :stats="pokemon.stats" />
+          <PokemonAttackSpeedBar :stats="pokemon.stats" />
         </v-card-text>
       </v-col>
     </v-row>
