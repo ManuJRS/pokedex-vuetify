@@ -41,31 +41,30 @@ const totalStats = computed(() => {
 
 <template>
   <v-card class="mt-6" variant="outlined">
-    <v-row no-gutters>
-      <v-col
-        cols="12"
-        sm="5"
-        class="d-flex justify-center align-center py-4"
-      >
-        <v-img
-          :src="pokemon.sprites.front_default"
-          :alt="pokemon.name"
-          max-width="160"
-          contain
-        />
-      </v-col>
 
-      <v-col cols="12" sm="7">
-        <v-card-title class="text-h5">
-          #{{ pokemon.id }} — {{ pokemon.name }}
-        </v-card-title>
+    <div class="d-flex justify-center align-center py-4">
+      <v-img
+        :src="pokemon.sprites.front_default"
+        :alt="pokemon.name"
+        max-width="160"
+        contain
+      />
+    </div>
 
-        <v-card-text>
+    <v-divider />
+
+    <v-card-text>
+      <v-row>
+        <v-col cols="12">
+          <v-card-title class="text-h5 text-center">
+            #{{ pokemon.id }} — {{ pokemon.name }}
+          </v-card-title>
+
           <p><strong>Peso:</strong> {{ pokemon.weight }}</p>
           <p><strong>Altura:</strong> {{ pokemon.height }}</p>
           <p><strong>Total stats:</strong> {{ totalStats }}</p>
 
-          <p class="mt-2"><strong>Tipos:</strong></p>
+          <p class="mt-3"><strong>Tipos:</strong></p>
           <div class="d-flex flex-wrap gap-2 mb-4">
             <v-chip
               v-for="t in pokemon.types"
@@ -91,81 +90,149 @@ const totalStats = computed(() => {
             </v-chip>
           </div>
 
-          <PokemonStatsRadar :stats="pokemon.stats" />
-          <PokemonAttackSpeedBar :stats="pokemon.stats" />
-        </v-card-text>
-      </v-col>
-      <v-table density="compact" class="mb-4">
-    <thead>
-      <tr>
-        <th>Habilidad</th>
-        <th>Descripción</th>
-        <th>Oculta</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="ability in abilities" :key="ability.name">
-        <td>{{ ability.name }}</td>
-        <td>{{ ability.effect }}</td>
-        <td>
-          <v-chip
-            :color="ability.is_hidden ? 'deep-purple-darken-2' : 'green-darken-2'"
-            text-color="white"
-            size="x-small"
+          <v-divider class="my-4" />
+
+          <p class="mb-2"><strong>Habilidades:</strong></p>
+          <v-table density="compact" class="mb-4">
+            <thead>
+              <tr>
+                <th>Habilidad</th>
+                <th>Descripción</th>
+                <th>Oculta</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="ability in abilities" :key="ability.name">
+                <td>{{ ability.name }}</td>
+                <td>{{ ability.effect }}</td>
+                <td>
+                  <v-chip
+                    :color="ability.is_hidden ? 'deep-purple-darken-2' : 'green-darken-2'"
+                    text-color="white"
+                    size="x-small"
+                  >
+                    {{ ability.is_hidden ? 'Sí' : 'No' }}
+                  </v-chip>
+                </td>
+              </tr>
+            </tbody>
+          </v-table>
+
+          <v-divider class="my-4" />
+
+<div class="mb-4">
+  <div v-if="evolutions.length">
+    <p class="mt-4 mb-2"><strong>Cadena evolutiva:</strong></p>
+
+    <div class="evolution-chain pa-4 rounded-lg">
+      <div
+        v-for="(stage, index) in evolutions"
+        :key="stage.stage"
+        class="d-flex align-center"
+      >
+        <div class="evolution-stage d-flex flex-column align-center">
+          <div
+            v-for="poke in stage.pokemons"
+            :key="poke.id"
+            class="text-center mb-3 mx-2"
           >
-            {{ ability.is_hidden ? 'Sí' : 'No' }}
-          </v-chip>
-        </td>
-      </tr>
-    </tbody>
-  </v-table>
+            <v-avatar size="64" class="mb-1">
+              <v-img
+                v-if="poke.sprite"
+                :src="poke.sprite"
+                :alt="poke.name"
+              />
+              <span v-else>?</span>
+            </v-avatar>
 
+            <div
+              class="text-caption"
+              :class="{ 'text-yellow-accent-3': poke.name === pokemon.name }"
+            >
+              #{{ poke.id }} {{ poke.name }}
+              <span v-if="poke.name === pokemon.name"> (actual)</span>
+            </div>
 
-<div v-if="evolutions.length" class="mb-4">
-  <p class="mt-4"><strong>Evolución:</strong></p>
-  <v-row
-    v-for="stage in evolutions"
-    :key="stage.stage"
-    class="mb-3"
-  >
-<v-col
-  v-for="poke in stage.pokemons"
-  :key="poke.id"
-  cols="4"
-  class="text-center"
->
-  <v-avatar size="64" class="mb-1">
-    <v-img
-      v-if="poke.sprite"
-      :src="poke.sprite"
-      :alt="poke.name"
-    />
-    <span v-else>?</span>
-  </v-avatar>
+            <div
+              v-if="poke.method && stage.stage > 1"
+              class="text-caption mt-1 evolution-method"
+            >
+              <em>{{ poke.method }}</em>
+            </div>
+          </div>
 
-  <div
-    class="text-caption"
-    :class="{ 'text-yellow-accent-3': poke.name === pokemon.name }"
-  >
-    #{{ poke.id }} {{ poke.name }}
-    <span v-if="poke.name === pokemon.name"> (actual)</span>
+          <v-icon
+            v-if="index < evolutions.length - 1"
+            icon="mdi-arrow-down"
+            class="evolution-arrow-mobile d-flex d-sm-none mt-2"
+          />
+        </div>
+
+        <v-icon
+          v-if="index < evolutions.length - 1"
+          icon="mdi-arrow-right"
+          class="evolution-arrow d-none d-sm-flex mx-3"
+        />
+      </div>
+    </div>
   </div>
 
-  <!-- Método de evolución, solo si existe -->
-  <div
-    v-if="poke.method && stage.stage > 1"
-    class="text-caption mt-1"
-  >
-    <em>{{ poke.method }}</em>
-  </div>
-</v-col>
-
-  </v-row>
+  <p v-else class="text-body-2 mb-4">
+    Este Pokémon no tiene cadena de evolución.
+  </p>
 </div>
+          <v-divider class="my-4" />
 
-<p v-else class="text-body-2 mb-4">
-  Este Pokémon no tiene cadena de evolución.
-</p>
-    </v-row>
+
+          <PokemonStatsRadar :stats="pokemon.stats" />
+
+                    <v-divider class="my-4" />
+
+          <PokemonAttackSpeedBar :stats="pokemon.stats" />
+
+        </v-col>
+      </v-row>
+    </v-card-text>
+
   </v-card>
 </template>
+
+
+<style scoped>
+.evolution-chain {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.evolution-stage {
+  text-align: center;
+}
+
+.evolution-method {
+  opacity: 0.85;
+}
+
+/* Flechas desktop (ya se ocultan en mobile con las clases de Vuetify) */
+.evolution-arrow {
+  font-size: 28px;
+}
+
+/* Flechas mobile (debajo de la etapa) */
+.evolution-arrow-mobile {
+  font-size: 28px;
+}
+
+/* Extra: en pantallas pequeñas la cadena se apila en columna */
+@media (max-width: 600px) {
+  .evolution-chain {
+    flex-direction: column;
+  }
+}
+
+
+
+</style>
