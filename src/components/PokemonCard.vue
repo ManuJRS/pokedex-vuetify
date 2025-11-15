@@ -1,18 +1,33 @@
 <script setup lang="ts">
+import { computed, watch, ref } from 'vue'
 import type { Pokemon } from '../types/pokemon'
 import PokemonStatsRadar from '../components/PokemonStatsRadar.vue'
-import PokemonAttackSpeedBar from '../components/PokemonAttackSpeedBar.vue';
-import { computed } from 'vue';
-
-const totalStats = computed(() => {
-  return props.pokemon.stats.reduce((sum, stat) => { 
-    return sum + stat.base_stat
-  }, 0);
-});
+import PokemonAttackSpeedBar from '../components/PokemonAttackSpeedBar.vue'
+import { fetchWeaknesses } from '../service/PokemonType'
 
 const props = defineProps<{
   pokemon: Pokemon
 }>()
+
+const weaknesses = ref<string[]>([])
+
+watch(
+  () => props.pokemon,
+  async (newVal) => {
+    if (newVal) {
+      weaknesses.value = await fetchWeaknesses(newVal.types)
+    } else {
+      weaknesses.value = []
+    }
+  },
+  { immediate: true }
+)
+
+const totalStats = computed(() => {
+  return props.pokemon.stats.reduce((sum, stat) => {
+    return sum + stat.base_stat
+  }, 0)
+})
 </script>
 
 <template>
@@ -54,7 +69,19 @@ const props = defineProps<{
             </v-chip>
           </div>
 
-          <!-- Gráfica de stats -->
+          <p class="mt-2"><strong>Debilidades:</strong></p>
+          <div class="d-flex flex-wrap gap-2 mb-4">
+            <v-chip
+              v-for="weak in weaknesses"
+              :key="weak"
+              color="blue-darken-2"
+              text-color="white"
+              size="small"
+            >
+              {{ weak }}
+            </v-chip>
+          </div>
+
           <PokemonStatsRadar :stats="pokemon.stats" />
           <PokemonAttackSpeedBar :stats="pokemon.stats" />
         </v-card-text>
