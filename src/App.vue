@@ -39,13 +39,14 @@ const onSearch = async () => {
           <v-col cols="12" md="8">
             <v-card>
               <v-toolbar color="red-darken-2" dark>
-                <v-toolbar-title>Pokédex Vuetify + TS</v-toolbar-title>
+                <v-toolbar-title>Pokédex by Manudev</v-toolbar-title>
                 <v-spacer />
                 <v-icon>mdi-pokeball</v-icon>
               </v-toolbar>
 
               <v-card-text>
                 <p class="mb-4">
+                  <span>Este es un ejercicio aplicando Vuetify + TS + ChartJS //</span>
                   Escribe el nombre o ID de un Pokémon y consulta sus datos desde la PokeAPI.
                 </p>
 
