@@ -62,7 +62,7 @@ const totalStats = computed(() => {
 
           <p><strong>Peso:</strong> {{ pokemon.weight }}</p>
           <p><strong>Altura:</strong> {{ pokemon.height }}</p>
-          <p><strong>Total stats:</strong> {{ totalStats }}</p>
+          <p><strong>Total Stats:</strong> {{ totalStats }}</p>
 
           <p class="mt-3"><strong>Tipos:</strong></p>
           <div class="d-flex flex-wrap gap-2 mb-4">
