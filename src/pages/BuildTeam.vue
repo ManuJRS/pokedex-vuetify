@@ -84,7 +84,6 @@ const removeFromTeam = (index: number) => {
 
 }
 
-// asegurar string para VImg
 const getSprite = (pokemon: Pokemon): string =>
   pokemon.sprites.other?.['official-artwork']?.front_default ||
   pokemon.sprites.front_default ||
@@ -102,11 +101,7 @@ const totalTeamPower = computed(() => {
 
 <template>
   <div>
-    <h1 class="text-h4 mb-4">
-      Armador de equipos
-    </h1>
 
-    <!-- Recuadro de explicación de la cobertura -->
     <v-alert
       type="info"
       variant="tonal"
@@ -121,7 +116,11 @@ const totalTeamPower = computed(() => {
         para ayudarte a mejorar su balance defensivo.
       </p>
     </v-alert>
-
+            <v-toolbar color="red-darken-2" dark>
+          <v-toolbar-title>Armador de Equipos</v-toolbar-title>
+          <v-spacer />
+          <v-icon>mdi-pokeball</v-icon>
+        </v-toolbar>
     <v-row>
       <v-col cols="12" md="5">
         <v-card>

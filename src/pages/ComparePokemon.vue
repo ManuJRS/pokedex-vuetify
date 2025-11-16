@@ -76,9 +76,24 @@ const fetchSide = async (side: 'A' | 'B') => {
 
 <template>
   <div>
-    <h1 class="text-h4 mb-6">
-      Comparador de Pokémon
-    </h1>
+        <v-alert
+      type="info"
+      variant="tonal"
+      density="comfortable"
+      class="mb-6"
+    >
+      <p class="mb-0">
+        El comparador te permite enfrentar dos Pokémon lado a lado. Podrás ver sus estadísticas base,
+        tipos y una gráfica comparativa que muestra sus puntos fuertes y débiles de un vistazo.
+        Además, se calcula la efectividad entre sus tipos para ayudarte a entender quién tiene ventaja
+        en combate y cómo se complementan dentro de un equipo.
+      </p>
+    </v-alert>
+            <v-toolbar color="red-darken-2" dark>
+          <v-toolbar-title>Comparador de Pokémon</v-toolbar-title>
+          <v-spacer />
+          <v-icon>mdi-pokeball</v-icon>
+        </v-toolbar>
 
     <v-row>
       <v-col cols="12" md="6">
