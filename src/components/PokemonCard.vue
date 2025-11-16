@@ -12,6 +12,12 @@ const props = defineProps<{
   pokemon: Pokemon
 }>()
 
+const mainSprite = computed(() =>
+  props.pokemon.sprites.other?.['official-artwork']?.front_default ||
+  props.pokemon.sprites.front_default ||
+  ''
+)
+
 const weaknesses = ref<string[]>([])
 const abilities = ref<PokemonAbilityWithEffect[]>([])
 const evolutions = ref<EvolutionStage[]>([])
@@ -44,7 +50,7 @@ const totalStats = computed(() => {
 
     <div class="d-flex justify-center align-center py-4">
       <v-img
-        :src="pokemon.sprites.front_default"
+        :src="mainSprite"
         :alt="pokemon.name"
         max-width="160"
         contain
@@ -62,7 +68,7 @@ const totalStats = computed(() => {
 
           <p><strong>Peso:</strong> {{ pokemon.weight }}</p>
           <p><strong>Altura:</strong> {{ pokemon.height }}</p>
-          <p><strong>Total stats:</strong> {{ totalStats }}</p>
+          <p><strong>Total Stats:</strong> {{ totalStats }}</p>
 
           <p class="mt-3"><strong>Tipos:</strong></p>
           <div class="d-flex flex-wrap gap-2 mb-4">
