@@ -2,24 +2,25 @@
 import { useRoute } from 'vue-router'
 
 interface NavLink {
-  to: string
+  name: string
   label: string
 }
 
 const route = useRoute()
 
 const links: NavLink[] = [
-  { 
-    to: '/pokedex', 
-    label: 'Pokedex'
-},
-  { 
-    to: '/compare', 
-    label: 'Comparar Pokémon'
-},
-  { to: '/build-team', 
-  label: 'Armar equipo'
-},
+  {
+    name: 'pokedex',
+    label: 'Pokedex',
+  },
+  {
+    name: 'compare',
+    label: 'Comparar Pokémon',
+  },
+  {
+    name: 'build-team',
+    label: 'Armar equipo',
+  },
 ]
 </script>
 
@@ -37,11 +38,11 @@ const links: NavLink[] = [
 
     <v-btn
       v-for="link in links"
-      :key="link.to"
-      :to="link.to"
+      :key="link.name"
+      :to="{ name: link.name }"
       variant="text"
       class="text-none"
-      :border="route.path === link.to ? 'sm' : undefined"
+      :border="route.name === link.name ? 'sm' : undefined"
     >
       {{ link.label }}
     </v-btn>

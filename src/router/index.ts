@@ -7,22 +7,22 @@ import BuildTeam from '../pages/BuildTeam.vue'
 const routes: RouteRecordRaw[] = [
     {
         path: '/',
-        redirect: '/pokedex',
+        redirect: '/pokedex'
     },
     {
         path: '/pokedex',
         name: 'pokedex',
-        component: PokeLab,
+        component: PokeLab
     },
     {
         path: '/compare',
         name: 'compare',
-        component: ComparePokemon,
+        component: ComparePokemon
     },
     {
         path: '/build-team',
         name: 'build-team',
-        component: BuildTeam,
+        component: BuildTeam
     },
 ]
 
